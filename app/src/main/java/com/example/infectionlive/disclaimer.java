@@ -17,18 +17,20 @@ public class disclaimer extends Activity {
             Intent ccco = new Intent(disclaimer.this,loading.class);
             startActivity(ccco);
             finish();
+        }else{
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    sharedPref.edit().putString("user_name","name").commit();
+                    Intent ccco = new Intent(disclaimer.this,loading.class);
+                    startActivity(ccco);
+                    finish();
+                }
+            }, 5000);
         }
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
 
-                sharedPref.edit().putString("user_name","name").commit();
-                Intent ccco = new Intent(disclaimer.this,loading.class);
-                startActivity(ccco);
-                finish();
-            }
-        }, 5000);
 
     }
 }

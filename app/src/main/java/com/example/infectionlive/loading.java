@@ -23,7 +23,7 @@ public class loading extends Activity {
 
 
             }
-        }, 10000);
+        }, 3000);
 
     }
 }

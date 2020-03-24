@@ -24,7 +24,8 @@
         </activity>
         <activity
             android:name=".main"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+            android:theme="@style/Theme.AppCompat">
         </activity>
     </application>
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
