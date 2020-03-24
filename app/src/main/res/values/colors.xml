@@ -36,6 +36,10 @@
         <color name="good">#00A0FF</color>
         <color name="satisfactory">#00796B</color>
 
+        <color name="amaz">#004039</color>
+        <color name="ok">#2E344E</color>
+        <color name="bad">#5B2949</color>
+
     </resources>
 
 

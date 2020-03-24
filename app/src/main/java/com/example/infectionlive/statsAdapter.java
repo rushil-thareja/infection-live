@@ -40,7 +40,7 @@ public class statsAdapter extends RecyclerView.Adapter<statsAdapter.statsHolder>
     }
 
     public class statsHolder extends RecyclerView.ViewHolder {
-        private TextView state,indian,foreign,recovered,deaths;
+        private TextView state,indian,foreign,recovered,deaths,tot;
 
 
         public statsHolder(View itemView) {
@@ -50,6 +50,7 @@ public class statsAdapter extends RecyclerView.Adapter<statsAdapter.statsHolder>
             foreign = itemView.findViewById(R.id.txt_foreign);
             recovered = itemView.findViewById(R.id.txt_recovered);
             deaths = itemView.findViewById(R.id.txt_deaths);
+            tot = itemView.findViewById(R.id.txt_total);
         }
         public void setDetails(stats stats) {
 //            if(stats.getState().equals("Poor")){
@@ -59,11 +60,23 @@ public class statsAdapter extends RecyclerView.Adapter<statsAdapter.statsHolder>
 //            }else{
 //                itemView.setBackgroundColor(Color.parseColor("#00796B"));
 //            }
-            state.setText("state : "+stats.getState());
-            indian.setText("indian : "+stats.getIndian());
-            foreign.setText("foreign : "+stats.getForeign());
-            recovered.setText("recovered : "+stats.getRecovered());
-            deaths.setText("deaths : "+stats.getDeaths());
+
+
+            state.setText(stats.getState());
+            indian.setText(Integer.toString(stats.getIndian()));
+            foreign.setText(Integer.toString(stats.getForeign()));
+            recovered.setText(Integer.toString(stats.getRecovered()));
+            deaths.setText(Integer.toString(stats.getDeaths()));
+            int total = stats.getForeign() + stats.getIndian();
+            if(total>=50){
+                itemView.setBackgroundColor(Color.parseColor("#5B2949"));
+            }else if(total>=20){
+                itemView.setBackgroundColor(Color.parseColor("#2E344E"));
+            }else{
+                itemView.setBackgroundColor(Color.parseColor("#004039"));
+            }
+            tot.setText("total : " +Integer.toString(total));
+
         }
     }
 }

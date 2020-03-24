@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -22,6 +23,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,6 +38,7 @@ public class main extends Activity {
     private ArrayList<stats> planetArrayList;
     private OkHttpClient client;
     private TextView tot;
+    LottieAnimationView refresh;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +57,9 @@ public class main extends Activity {
         adapter = new statsAdapter(this, planetArrayList);
         recyclerView.setAdapter(adapter);
 
+        refresh = findViewById(R.id.refresh);
+
+
         final FloatingActionButton stop = findViewById(R.id.fab);
 
         graph.setBackgroundResource(R.drawable.ic_graph__blue);
@@ -65,6 +71,7 @@ public class main extends Activity {
         graph.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 load_stats();
             }
         });
@@ -72,9 +79,29 @@ public class main extends Activity {
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 load_stats();
+                refresh.setVisibility(View.VISIBLE);
+                refresh.playAnimation();
+                recyclerView.setVisibility(View.INVISIBLE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        refresh.cancelAnimation();
+                        refresh.setVisibility(View.INVISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+
+
+
+                    }
+                }, 3000);
+
             }
         });
+
+        load_stats();
     }
     public void load_stats(){
         final Request request = new Request.Builder().url("https://api.rootnet.in/covid19-in/stats/latest").build();
@@ -99,17 +126,19 @@ public class main extends Activity {
                     public void run() {
 
                         try {
+                            planetArrayList.clear();
 
                             String  res = response.body().string();
+
                             JSONObject out = new JSONObject(res);
-                            boolean suc = out.getBoolean("success");
-                            if(suc != true){
+                                boolean suc = out.getBoolean("success");
+                                if(suc != true){
                                 Toast.makeText(main.this,"sorry could not get valid data",Toast.LENGTH_LONG).show();
                                 return;
                             }
-
-                            JSONObject data = new JSONObject("data");
-                            JSONObject summ = new JSONObject("summary");
+                            Log.d("dat",res);
+                            JSONObject data = out.getJSONObject("data");
+                            JSONObject summ = data.getJSONObject("summary");
                             int tot = summ.getInt("total");
                             int indian = summ.getInt("confirmedCasesIndian");
                             int foreign = summ.getInt("confirmedCasesForeign");
@@ -117,7 +146,8 @@ public class main extends Activity {
                             int deaths = summ.getInt("deaths");
                             int confirmed_but_unknown = summ.getInt("confirmedButLocationUnidentified");
 
-                            final String fin = "total : "+tot+" indian : " + indian + " foreign : " + foreign + " recovered : " + recovered + " deaths : " + deaths+" not located : " + confirmed_but_unknown;
+                            final String fin = "total: "+tot+"| indian: " + indian + "| foreign: " + foreign + "| recovered: " + recovered + "| deaths: " + deaths+"| not located : " + confirmed_but_unknown;
+                            Log.d("dat",fin);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -130,6 +160,7 @@ public class main extends Activity {
                             for(int i = 0 ; i < items.length() ; i++){
                                 JSONObject current = items.getJSONObject(i);
                                 String name = current.getString("loc");
+                                Log.d("dat","sehenhsa"+name);
                                 int india = current.getInt("confirmedCasesIndian");
                                 int fore = current.getInt("confirmedCasesForeign");
                                 int dis = current.getInt("discharged");
@@ -139,6 +170,11 @@ public class main extends Activity {
 
 
                             }
+
+                            Collections.sort(planetArrayList);
+
+
+
                             adapter.notifyDataSetChanged();
 
 

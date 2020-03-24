@@ -79,7 +79,7 @@
             android:layout_height="0dp"
             android:layout_weight="7"
             android:paddingLeft="30dp"
-            android:text="Latest Stats"
+            android:text="Latest Statistics"
             android:textColor="@color/white"
             android:textSize="30sp"
             tools:layout_editor_absoluteX="71dp"
@@ -89,22 +89,27 @@
             android:id="@+id/tot"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="5"
+            android:layout_weight="7"
             android:text="Total : "
             android:textColor="@color/blue"
-            android:textSize="20sp"
-            android:paddingLeft="50dp"
+            android:textSize="15sp"
+            android:textAlignment="center"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
             />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="88"
-            android:layout_margin="10dp"
+            android:layout_weight="86"
+
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+
             >
 
             <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/lav_actionBar"
+                android:id="@+id/refresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="0dp"
@@ -116,7 +121,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:lottie_fileName="loading_rentkaro.json"
                 app:lottie_loop="true"
-                android:background="@color/black"
+                android:background="@color/back"
                 android:visibility="gone"
                 />
 
@@ -149,44 +154,214 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="10"
+        android:layout_weight="7"
         android:weightSum="100"
         android:background="@color/purple"
+
         >
+        <TextView
+            android:id="@+id/editText0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="" />
         <ImageButton
             android:id="@+id/graph"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="25"
-            app:srcCompat="@drawable/ic_graph_black"
+            android:layout_weight="18"
+            app:srcCompat="@drawable/ic_graph__blue"
             android:background="@color/purple"
+
+
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             />
+
+        <TextView
+            android:id="@+id/editText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="" />
 
         <ImageButton
             android:id="@+id/history"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="25"
+            android:layout_weight="18"
             app:srcCompat="@drawable/ic_history_black"
             android:background="@color/purple"
+
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+
             />
+        <TextView
+            android:id="@+id/editText2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="" />
 
         <ImageButton
             android:id="@+id/beds"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="25"
+            android:layout_weight="18"
             app:srcCompat="@drawable/ic_beds_black"
             android:background="@color/purple"
+
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             />
+        <TextView
+            android:id="@+id/editText3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="" />
         <ImageButton
             android:id="@+id/help"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="25"
+            android:layout_weight="18"
             app:srcCompat="@drawable/ic_help_black"
             android:background="@color/purple"
+
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+
             />
+        <TextView
+            android:id="@+id/editText-1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:weightSum="100"
+        android:background="@color/purple"
+
+        >
+
+        <TextView
+            android:id="@+id/spaceText0"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="" />
+        <TextView
+            android:id="@+id/graph1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="18"
+
+            android:background="@color/purple"
+
+            android:text="statistics"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            />
+
+        <TextView
+            android:id="@+id/spaceText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/history1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="18"
+
+            android:background="@color/purple"
+
+            android:text="history"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+
+            />
+        <TextView
+            android:id="@+id/spaceText2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/beds1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="18"
+
+            android:background="@color/purple"
+
+            android:text="hospitals"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+
+            />
+        <TextView
+            android:id="@+id/spaceText3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="" />
+        <TextView
+            android:id="@+id/help1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="18"
+
+            android:background="@color/purple"
+
+            android:text="helplines"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+
+            />
+        <TextView
+            android:id="@+id/spaceText-1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="8"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="" />
     </LinearLayout>
 
 </LinearLayout>

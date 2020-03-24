@@ -1,6 +1,6 @@
 package com.example.infectionlive;
 
-public class stats {
+public class stats implements Comparable{
     private String state;
     private int indian;
     private int foreign;
@@ -53,5 +53,11 @@ public class stats {
 
     public void setDeaths(int deaths) {
         this.deaths = deaths;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        int other = ((stats) o).getIndian()+((stats) o).getForeign();
+        return other - (this.getIndian()+this.getForeign());
     }
 }
