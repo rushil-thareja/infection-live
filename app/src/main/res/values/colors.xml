@@ -1,0 +1,41 @@
+
+    <resources>
+        <color name="colorPrimary">#0088ff</color>
+        <color name="colorPrimaryDark">#005ccb</color>
+        <color name="colorAccent">#0c0e59</color>
+        <color name="pink">#FD00FF</color>
+        <color name="blue">#00A0FF</color>
+        <color name="purple">#7E50FF</color>
+        <color name="black">#000000</color>
+        <color name="back">#211348</color>
+        <color name="white">#ffffff</color>
+        <color name="itemhead">#5C5C5C</color>
+        <color name="itembody">#5C5C5C</color>
+        <color name="itempending">#00574B</color>
+        <color name="card_background">#F0F2F1</color>
+        <color name="yellow">#fff200</color>
+        <color name="grey">#A9A9A9</color>
+        <color name="red">#ff0000</color>
+        <color name="dark_grey">#626262</color>
+        <color name="darker_grey">#5B5B5B</color>
+        <color name="light_grey">#9f9f9f</color>
+        <color name="offwhite">#e5e5e5</color>
+        <color name="new_candidate">#E0FFE5</color>
+        <color name="new_candidate_footer">#21887D</color>
+        <color name="after_interview">#E8FFFF</color>
+        <color name="after_interview_footer">#214188</color>
+        <color name="interview_reminder">#FCFFE8</color>
+        <color name="interview_reminder_footer">#755311</color>
+        <color name="Follow_up_textcolor">#4F4F4F</color>
+        <color name="Grey_followup">#6C6C6C</color>
+        <color name="lightGrey_followup">#A2A2A2</color>
+        <color name="comments">#B0B0B0</color>
+        <color name="save_next">#00796B</color>
+
+        <color name="poor">#ff0000</color>
+        <color name="good">#00A0FF</color>
+        <color name="satisfactory">#00796B</color>
+
+    </resources>
+
+
