@@ -3,11 +3,16 @@ package com.example.infectionlive;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +20,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -24,6 +38,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -43,6 +58,13 @@ public class main extends Activity {
     private TextView tot;
     LottieAnimationView refresh;
     int current;
+    private TextView which;
+    private TextView stats_text , history_text , beds_text , helplines_text;
+    private LineChart chart;
+    private LinearLayout ll;
+    private List<Entry> entries = new ArrayList<>();
+    private List<String> categories = new ArrayList<>();
+    private TextView t;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,8 +75,53 @@ public class main extends Activity {
         beds = findViewById(R.id.beds);
         help = findViewById(R.id.help);
         tot = (TextView) findViewById(R.id.tot);
-
+        which = (TextView) findViewById(R.id.which);
+        stats_text = findViewById(R.id.graph1);
+        history_text = findViewById(R.id.history1);
+        beds_text = findViewById(R.id.beds1);
+        helplines_text = findViewById(R.id.help1);
+        chart = (LineChart) findViewById(R.id.chart);
+        ll = findViewById(R.id.llchart);
+        t = findViewById(R.id.tot);
         client = new OkHttpClient();
+        final Spinner spinner = (Spinner) findViewById(R.id.spinner);
+        categories.add("india");
+        categories.add("Andaman and Nicobar Islands");
+        categories.add("Andhra Pradesh");
+        categories.add("Arunachal Pradesh");
+        categories.add("Assam");
+        categories.add("Bihar");
+        categories.add("Chandigarh");
+        categories.add("Chhattisgarh");
+        categories.add("Dadra and Nagar Haveli");
+        categories.add("Daman and Diu");
+        categories.add("Delhi");
+        categories.add("Goa");
+        categories.add("Gujarat");
+        categories.add("Haryana");
+        categories.add("Himachal Pradesh");
+        categories.add("Jammu and Kashmir");
+        categories.add("Jharkhand");
+        categories.add("Karnataka");
+        categories.add("Kerala");
+        categories.add("Lakshadweep");
+        categories.add("Madhya Pradesh");
+        categories.add("Maharashtra");
+        categories.add("Manipur");
+        categories.add("Meghalaya");
+        categories.add("Mizoram");
+        categories.add("Nagaland");
+        categories.add("Orissa");
+        categories.add("Pondicherry");
+        categories.add("Punjab");
+        categories.add("Rajasthan");
+        categories.add("Sikkim");
+        categories.add("Tamil Nadu");
+        categories.add("Telangana");
+        categories.add("Tripura");
+        categories.add("Uttaranchal");
+        categories.add("Uttar Pradesh");
+        categories.add("West Bengal");
 
         recyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -80,24 +147,126 @@ public class main extends Activity {
         history.setBackgroundResource(R.drawable.ic_history_black);
         help.setBackgroundResource(R.drawable.ic_help_black);
 
+        load_stats();
+
+        history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                t.setVisibility(View.INVISIBLE);
+                spinner.setVisibility(View.VISIBLE);
+                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(main.class,R.layout.support_simple_spinner_dropdown_item);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                        Log.d("chua",(String)adapterView.getSelectedItem());
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> adapterView) {
+
+                    }
+                });
+                current = 2;
+                make_black();
+                history_text.setTextColor(Color.parseColor("#00A0FF"));
+                history.setBackgroundResource(R.drawable.ic_history_blue);
+                which.setText("Historical Statistics");
+                recyclerView.setVisibility(View.INVISIBLE);
+                bed.setVisibility(View.INVISIBLE);
+                ll.setVisibility(View.VISIBLE);
+                chart.setVisibility(View.VISIBLE);
+                for(int i = 0 ; i < 4 ; i++){
+                    entries.add(new Entry(i,i));
+                }
+                LineDataSet dataSet = new LineDataSet(entries, " ");
+
+                dataSet.setDrawCircles(true);
+                dataSet.setValueTextColor(Color.parseColor("#00A0FF"));
+                dataSet.setValueTextSize(16);
+                dataSet.setHighLightColor(Color.parseColor("#ffffff"));
+                dataSet.setFillColor(Color.parseColor("#00A0FF"));
+                LineData lineData = new LineData(dataSet);
+                chart.setData(lineData);
+                chart.invalidate();
+                chart.animateXY(500,1000);
+                Description d = new Description();
+                d.setText(" ");
+                chart.setDescription(d);
+                XAxis xAxis = chart.getXAxis();
+                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                xAxis.setTextColor(Color.parseColor("#ffffff"));
+                xAxis.setTextSize(16f);
+                String[] a= {"23/2","22/1","23/12","1/22"};
+                xAxis.setValueFormatter(new DateAxisValueFormatter(a));
+
+                YAxis leftAxis = chart.getAxisLeft();
+                leftAxis.setTextColor(Color.parseColor("#ffffff"));
+                leftAxis.setTextSize(16f);
+
+                YAxis rightAxis = chart.getAxisRight();
+                rightAxis.setTextColor(Color.parseColor("#211348"));
+            }
+        });
 
         graph.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bed.setVisibility(View.INVISIBLE);
-                recyclerView.setVisibility(View.VISIBLE);
-                current = 0;
+
+                current = 1;
+                make_black();
+                stats_text.setTextColor(Color.parseColor("#00A0FF"));
+                graph.setBackgroundResource(R.drawable.ic_graph__blue);
+                which.setText("Latest Statistics");
                 load_stats();
+                recyclerView.setVisibility(View.INVISIBLE);
+                bed.setVisibility(View.INVISIBLE);
+                refresh.setVisibility(View.VISIBLE);
+                refresh.playAnimation();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        refresh.cancelAnimation();
+                        refresh.setVisibility(View.INVISIBLE);
+                        recyclerView.setVisibility(View.VISIBLE);
+
+
+
+                    }
+                }, 1000);
             }
         });
 
         beds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 current = 1;
-                recyclerView.setVisibility(View.INVISIBLE);
-                beds.setVisibility(View.VISIBLE);
+                make_black();
+                beds_text.setTextColor(Color.parseColor("#00A0FF"));
+                beds.setBackgroundResource(R.drawable.ic_beds_blue);
+                which.setText("Hospital Statistics");
                 load_beds();
+                recyclerView.setVisibility(View.INVISIBLE);
+                bed.setVisibility(View.INVISIBLE);
+                refresh.setVisibility(View.VISIBLE);
+                refresh.playAnimation();
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+
+                        refresh.cancelAnimation();
+                        refresh.setVisibility(View.INVISIBLE);
+                        bed.setVisibility(View.VISIBLE);
+
+
+
+                    }
+                }, 1000);
             }
         });
 
@@ -146,7 +315,7 @@ public class main extends Activity {
             }
         });
 
-        load_stats();
+        //load_stats();
     }
     public void load_beds(){
         final Request request = new Request.Builder().url("https://api.rootnet.in/covid19-in/stats/hospitals").build();
@@ -353,6 +522,18 @@ public class main extends Activity {
                 });
             }
         });
+
+    }
+    public void make_black(){
+        graph.setBackgroundResource(R.drawable.ic_graph_black);
+        beds.setBackgroundResource(R.drawable.ic_beds_black);
+        history.setBackgroundResource(R.drawable.ic_history_black);
+        help.setBackgroundResource(R.drawable.ic_help_black);
+
+        stats_text.setTextColor(Color.parseColor("#ffffff"));
+        history_text.setTextColor(Color.parseColor("#ffffff"));
+        beds_text.setTextColor(Color.parseColor("#ffffff"));
+        helplines_text.setTextColor(Color.parseColor("#ffffff"));
 
     }
 
