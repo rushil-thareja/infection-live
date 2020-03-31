@@ -97,6 +97,17 @@
             android:layout_marginLeft="10sp"
             android:layout_marginRight="10sp"
             />
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="7"
+            android:layout_marginLeft="10sp"
+            android:layout_marginRight="10sp"
+            android:visibility="gone"
+            android:background="@color/back"
+            />
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -107,6 +118,24 @@
             android:layout_marginRight="10dp"
 
             >
+            <LinearLayout
+                android:id="@+id/llchart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/back"
+                android:orientation="vertical"
+                android:weightSum="100"
+                android:visibility="gone"
+                >
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="70"
+                    android:visibility="gone"
+                    />
+            </LinearLayout>
+
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/refresh"
@@ -132,6 +161,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="18dp"
+
                 />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -141,6 +171,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="18dp"
+                android:visibility="gone"
                 />
 
 
@@ -156,6 +187,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:srcCompat="@drawable/ic_autorenew_black_24dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
     </LinearLayout>
 

@@ -1,6 +1,6 @@
 package com.example.infectionlive;
 
-public class beds {
+public class beds  implements Comparable {
     String state;
     int rural_hospitals;
     int rural_beds;
@@ -73,5 +73,11 @@ public class beds {
 
     public void setTotal_beds(int total_beds) {
         this.total_beds = total_beds;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        int other = ((beds) o).getTotal_beds();
+        return other - (this.getTotal_beds());
     }
 }

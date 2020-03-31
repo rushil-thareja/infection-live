@@ -65,6 +65,8 @@ public class main extends Activity {
     private List<Entry> entries = new ArrayList<>();
     private List<String> categories = new ArrayList<>();
     private TextView t;
+    private Spinner spinner;
+    String[] dates;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +86,28 @@ public class main extends Activity {
         ll = findViewById(R.id.llchart);
         t = findViewById(R.id.tot);
         client = new OkHttpClient();
-        final Spinner spinner = (Spinner) findViewById(R.id.spinner);
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+
+        ArrayAdapter<CharSequence> adapters = ArrayAdapter.createFromResource(this,
+                R.array.india_states, android.R.layout.simple_spinner_item);
+// Specify the layout to use when the list of choices appears
+        adapters.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+// Apply the adapter to the spinner
+        spinner.setAdapter(adapters);
+        //spinner.setOnItemSelectedListener(this);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("chu dia",i+" "+l+" "+adapterView.getSelectedItemPosition());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         categories.add("india");
         categories.add("Andaman and Nicobar Islands");
         categories.add("Andhra Pradesh");
@@ -123,6 +146,8 @@ public class main extends Activity {
         categories.add("Uttar Pradesh");
         categories.add("West Bengal");
 
+        get_dates("India");
+
         recyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         bed = (RecyclerView) findViewById(R.id.beds_recy);
@@ -152,22 +177,25 @@ public class main extends Activity {
         history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                t.setVisibility(View.INVISIBLE);
-                spinner.setVisibility(View.VISIBLE);
-                ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(main.class,R.layout.support_simple_spinner_dropdown_item);
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                        Log.d("chua",(String)adapterView.getSelectedItem());
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> adapterView) {
-
-                    }
-                });
-                current = 2;
                 make_black();
+                t.setVisibility(View.GONE);
+                spinner.setVisibility(View.VISIBLE);
+                //ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(main.class,R.layout.support_simple_spinner_dropdown_item);
+
+//                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                        Log.d("chua",(String)adapterView.getSelectedItem());
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//                    }
+//                });
+
+                current = 2;
+
                 history_text.setTextColor(Color.parseColor("#00A0FF"));
                 history.setBackgroundResource(R.drawable.ic_history_blue);
                 which.setText("Historical Statistics");
@@ -175,7 +203,14 @@ public class main extends Activity {
                 bed.setVisibility(View.INVISIBLE);
                 ll.setVisibility(View.VISIBLE);
                 chart.setVisibility(View.VISIBLE);
-                for(int i = 0 ; i < 4 ; i++){
+
+                get_dates("India");
+                for(String s : dates){
+                    Log.d("got",s);
+                }
+
+                for(int i = 0 ; i < dates.length ; i++){
+
                     entries.add(new Entry(i,i));
                 }
                 LineDataSet dataSet = new LineDataSet(entries, " ");
@@ -196,8 +231,10 @@ public class main extends Activity {
                 xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
                 xAxis.setTextColor(Color.parseColor("#ffffff"));
                 xAxis.setTextSize(16f);
-                String[] a= {"23/2","22/1","23/12","1/22"};
-                xAxis.setValueFormatter(new DateAxisValueFormatter(a));
+
+
+
+                xAxis.setValueFormatter(new DateAxisValueFormatter(dates));
 
                 YAxis leftAxis = chart.getAxisLeft();
                 leftAxis.setTextColor(Color.parseColor("#ffffff"));
@@ -211,7 +248,7 @@ public class main extends Activity {
         graph.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                t.setVisibility(View.VISIBLE);
                 current = 1;
                 make_black();
                 stats_text.setTextColor(Color.parseColor("#00A0FF"));
@@ -242,7 +279,7 @@ public class main extends Activity {
         beds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                t.setVisibility(View.VISIBLE);
                 current = 1;
                 make_black();
                 beds_text.setTextColor(Color.parseColor("#00A0FF"));
@@ -317,6 +354,73 @@ public class main extends Activity {
 
         //load_stats();
     }
+    public String[] get_dates(final String state){
+
+        final ArrayList<String> d = new ArrayList<>();
+        final Request request = new Request.Builder().url("https://api.rootnet.in/covid19-in/stats/history").build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+                runOnUiThread(new Runnable() {
+
+                    @Override
+                    public void run() {
+
+                        Toast.makeText(main.this,"could not make connection check internet",Toast.LENGTH_LONG).show();
+
+                    }
+                });
+            }
+            @Override
+            public void onResponse(Call call, final Response response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        try {
+                            //hospitals.clear();
+
+                            String  res = response.body().string();
+
+                            JSONObject out = new JSONObject(res);
+                            boolean suc = out.getBoolean("success");
+                            if(suc != true){
+                                Toast.makeText(main.this,"sorry could not get valid data",Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            Log.d("dates ayi",res);
+                            JSONArray data = out.getJSONArray("data");
+                            if(state.equals("India")){
+
+                            }
+                            for(int i =0 ; i< data.length(); i++){
+                                JSONObject o = data.getJSONObject(i);
+                                d.add(o.getString("day"));
+                                Log.d("date at",d.get(i));
+                            }
+
+
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(main.this,"sorry could not load data",Toast.LENGTH_LONG).show();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+
+                        }
+
+                    }
+                });
+            }
+        });
+        dates = new String[d.size()];
+        for(int i = 0 ; i<d.size(); i++){
+            dates[i] = d.get(i);
+            Log.d("date",dates[i]);
+        }
+        return(dates);
+    }
+
     public void load_beds(){
         final Request request = new Request.Builder().url("https://api.rootnet.in/covid19-in/stats/hospitals").build();
         client.newCall(request).enqueue(new Callback() {
@@ -525,6 +629,8 @@ public class main extends Activity {
 
     }
     public void make_black(){
+        spinner.setVisibility(View.GONE);
+
         graph.setBackgroundResource(R.drawable.ic_graph_black);
         beds.setBackgroundResource(R.drawable.ic_beds_black);
         history.setBackgroundResource(R.drawable.ic_history_black);
@@ -535,6 +641,21 @@ public class main extends Activity {
         beds_text.setTextColor(Color.parseColor("#ffffff"));
         helplines_text.setTextColor(Color.parseColor("#ffffff"));
 
+        ll.setVisibility(View.GONE);
+        chart.setVisibility(View.GONE);
+    }
+    public void selected_state(String state){
+        Log.d("chua",state);
     }
 
+//
+//    @Override
+//    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//        Log.d("chua",(String)adapterView.getSelectedItem());
+//    }
+//
+//    @Override
+//    public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//    }
 }

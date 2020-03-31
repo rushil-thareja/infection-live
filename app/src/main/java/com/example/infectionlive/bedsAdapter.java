@@ -40,7 +40,7 @@ public class bedsAdapter extends RecyclerView.Adapter<bedsAdapter.bedsHolder>{
     }
 
     public class bedsHolder extends RecyclerView.ViewHolder {
-        private TextView state,rural_hospitals,rural_beds,urban_hospitals,urban_beds,total_hospitals,total_beds;
+        private TextView state,rural_hospitals,rural_beds,urban_hospitals,urban_beds,tot;
 
 
         public bedsHolder(View itemView) {
@@ -50,6 +50,7 @@ public class bedsAdapter extends RecyclerView.Adapter<bedsAdapter.bedsHolder>{
             rural_beds = itemView.findViewById(R.id.rural_beds);
             urban_beds = itemView.findViewById(R.id.urban_beds);
             urban_hospitals = itemView.findViewById(R.id.urban_hospitals);
+            tot = itemView.findViewById(R.id.beds_total);
         }
         public void setDetails(beds beds) {
 //            if(beds.getState().equals("Poor")){
@@ -62,21 +63,21 @@ public class bedsAdapter extends RecyclerView.Adapter<bedsAdapter.bedsHolder>{
 
 
             state.setText(beds.getState());
-            rural_beds.setText("rural beds: "+Integer.toString(beds.getRural_beds()));
-            rural_hospitals.setText("rural hospitals: "+Integer.toString(beds.getRural_beds()));
-            rural_beds.setText("rural beds: "+Integer.toString(beds.getRural_beds()));
-            rural_beds.setText("rural beds: "+Integer.toString(beds.getRural_beds()));
-            recovered.setText(Integer.toString(beds.getRecovered()));
-            deaths.setText(Integer.toString(beds.getDeaths()));
-            int total = beds.getForeign() + beds.getIndian();
-            if(total>=50){
+            rural_beds.setText("rural beds:    "+Integer.toString(beds.getRural_beds()));
+            rural_hospitals.setText("rural hospitals:    "+Integer.toString(beds.getRural_beds()));
+            urban_beds.setText("urban beds:   "+Integer.toString(beds.getUrban_beds()));
+            urban_hospitals.setText("rural beds:    "+Integer.toString(beds.getUrban_hospitals()));
+            tot.setText("total beds: "+beds.getTotal_beds()+" | total hospitals: "+beds.total_hospitals);
+
+            int total = beds.getTotal_beds();
+            if(total<=5000){
                 itemView.setBackgroundColor(Color.parseColor("#5B2949"));
-            }else if(total>=20){
+            }else if(total<=20000){
                 itemView.setBackgroundColor(Color.parseColor("#2E344E"));
             }else{
                 itemView.setBackgroundColor(Color.parseColor("#004039"));
             }
-            tot.setText("total : " +Integer.toString(total));
+
 
         }
     }
