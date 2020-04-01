@@ -29,6 +29,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
@@ -66,7 +68,10 @@ public class main extends Activity {
     private List<String> categories = new ArrayList<>();
     private TextView t;
     private Spinner spinner;
+    int fill;
+    int fill2;
     String[] dates;
+    int[] vals;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +91,7 @@ public class main extends Activity {
         ll = findViewById(R.id.llchart);
         t = findViewById(R.id.tot);
         client = new OkHttpClient();
-
+        fill = 0;
         spinner = (Spinner) findViewById(R.id.spinner);
 
         ArrayAdapter<CharSequence> adapters = ArrayAdapter.createFromResource(this,
@@ -146,7 +151,7 @@ public class main extends Activity {
         categories.add("Uttar Pradesh");
         categories.add("West Bengal");
 
-        get_dates("India");
+        //get_dates("India");
 
         recyclerView = (RecyclerView) findViewById(R.id.RecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -174,10 +179,34 @@ public class main extends Activity {
 
         load_stats();
 
+        chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                float x = e.getX();
+                float y = e.getY();
+                String selected_day = dates[(int)x];
+
+                String to_be_set = "day : "+selected_day+" cases : " + y;
+                TextView set = findViewById(R.id.chosen);
+                set.setText(to_be_set);
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+
         history.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                stop.hide();
+
+                chart.clear();
                 make_black();
+                TextView set = findViewById(R.id.chosen);
+                set.setVisibility(View.VISIBLE);
                 t.setVisibility(View.GONE);
                 spinner.setVisibility(View.VISIBLE);
                 //ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(main.class,R.layout.support_simple_spinner_dropdown_item);
@@ -199,55 +228,92 @@ public class main extends Activity {
                 history_text.setTextColor(Color.parseColor("#00A0FF"));
                 history.setBackgroundResource(R.drawable.ic_history_blue);
                 which.setText("Historical Statistics");
+                refresh.setVisibility(View.VISIBLE);
+                refresh.playAnimation();
+
+                dates = new String[10000];
+                vals = new int[10000];
+                get_dates("India",dates,vals);
+
+
+
+
                 recyclerView.setVisibility(View.INVISIBLE);
                 bed.setVisibility(View.INVISIBLE);
-                ll.setVisibility(View.VISIBLE);
-                chart.setVisibility(View.VISIBLE);
 
-                get_dates("India");
-                for(String s : dates){
-                    Log.d("got",s);
-                }
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int i = 0; i < fill ; i++){
+                            Log.d("gash",dates[i]);
+                        }
 
-                for(int i = 0 ; i < dates.length ; i++){
+                        ll.setVisibility(View.VISIBLE);
+                        chart.setVisibility(View.VISIBLE);
 
-                    entries.add(new Entry(i,i));
-                }
-                LineDataSet dataSet = new LineDataSet(entries, " ");
 
-                dataSet.setDrawCircles(true);
-                dataSet.setValueTextColor(Color.parseColor("#00A0FF"));
-                dataSet.setValueTextSize(16);
-                dataSet.setHighLightColor(Color.parseColor("#ffffff"));
-                dataSet.setFillColor(Color.parseColor("#00A0FF"));
-                LineData lineData = new LineData(dataSet);
-                chart.setData(lineData);
-                chart.invalidate();
-                chart.animateXY(500,1000);
-                Description d = new Description();
-                d.setText(" ");
-                chart.setDescription(d);
-                XAxis xAxis = chart.getXAxis();
-                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                xAxis.setTextColor(Color.parseColor("#ffffff"));
-                xAxis.setTextSize(16f);
+                        refresh.cancelAnimation();
+                        refresh.setVisibility(View.INVISIBLE);
 
 
 
-                xAxis.setValueFormatter(new DateAxisValueFormatter(dates));
+                        String[] pass = new String[fill];
 
-                YAxis leftAxis = chart.getAxisLeft();
-                leftAxis.setTextColor(Color.parseColor("#ffffff"));
-                leftAxis.setTextSize(16f);
+                        for(int i = 0; i < fill ; i++){
+                            pass[i] = Integer.toString(i);
+                        }
 
-                YAxis rightAxis = chart.getAxisRight();
-                rightAxis.setTextColor(Color.parseColor("#211348"));
+                        for(int i = 0 ; i < fill ; i++){
+
+                            entries.add(new Entry(i,vals[i]));
+                        }
+                        LineDataSet dataSet = new LineDataSet(entries, " ");
+
+                        dataSet.setDrawCircles(true);
+                        dataSet.setValueTextColor(Color.parseColor("#00A0FF"));
+                        dataSet.setValueTextSize(16);
+                        dataSet.setHighLightColor(Color.parseColor("#ffffff"));
+                        dataSet.setFillColor(Color.parseColor("#00A0FF"));
+                        LineData lineData = new LineData(dataSet);
+                        chart.setData(lineData);
+                        chart.invalidate();
+                        chart.animateXY(1000,2000);
+                        Description d = new Description();
+                        d.setText("start day : "+dates[0]+"end day : "+dates[fill-1]);
+                        d.setTextColor(Color.parseColor("#ffffff"));
+                        //d.setPosition(d.getXOffset(),d.getYOffset()-2f);
+                        d.setTextSize(14f);
+                        chart.setDescription(d);
+
+                        XAxis xAxis = chart.getXAxis();
+                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                        xAxis.setTextColor(Color.parseColor("#ffffff"));
+                        xAxis.setTextSize(16f);
+
+
+
+                        xAxis.setValueFormatter(new DateAxisValueFormatter(pass));
+
+                        YAxis leftAxis = chart.getAxisLeft();
+                        leftAxis.setTextColor(Color.parseColor("#ffffff"));
+                        leftAxis.setTextSize(16f);
+
+                        YAxis rightAxis = chart.getAxisRight();
+                        rightAxis.setTextColor(Color.parseColor("#211348"));
+
+
+                    }
+                }, 3000);
+
+
+
             }
         });
 
         graph.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                stop.show();
                 t.setVisibility(View.VISIBLE);
                 current = 1;
                 make_black();
@@ -279,6 +345,7 @@ public class main extends Activity {
         beds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                stop.show();
                 t.setVisibility(View.VISIBLE);
                 current = 1;
                 make_black();
@@ -354,9 +421,10 @@ public class main extends Activity {
 
         //load_stats();
     }
-    public String[] get_dates(final String state){
+    public  void get_dates(final String state , final String[] dat , final int[] vals){
 
         final ArrayList<String> d = new ArrayList<>();
+        final ArrayList<Integer> v = new ArrayList<>();
         final Request request = new Request.Builder().url("https://api.rootnet.in/covid19-in/stats/history").build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -396,8 +464,19 @@ public class main extends Activity {
                             }
                             for(int i =0 ; i< data.length(); i++){
                                 JSONObject o = data.getJSONObject(i);
+                                JSONObject summ = o.getJSONObject("summary");
+                                v.add(summ.getInt("total"));
                                 d.add(o.getString("day"));
                                 Log.d("date at",d.get(i));
+                            }
+
+                            fill = d.size();
+                            fill2 = v.size();
+                            for(int i = 0 ; i<d.size(); i++){
+
+                                vals[i] = v.get(i);
+                                dat[i] = d.get(i);
+                                Log.d("date put in . . .",dat[i]);
                             }
 
 
@@ -413,12 +492,8 @@ public class main extends Activity {
                 });
             }
         });
-        dates = new String[d.size()];
-        for(int i = 0 ; i<d.size(); i++){
-            dates[i] = d.get(i);
-            Log.d("date",dates[i]);
-        }
-        return(dates);
+
+
     }
 
     public void load_beds(){
@@ -630,6 +705,7 @@ public class main extends Activity {
     }
     public void make_black(){
         spinner.setVisibility(View.GONE);
+        TextView set = findViewById(R.id.chosen);
 
         graph.setBackgroundResource(R.drawable.ic_graph_black);
         beds.setBackgroundResource(R.drawable.ic_beds_black);
