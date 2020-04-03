@@ -46,8 +46,8 @@ public class statsAdapter extends RecyclerView.Adapter<statsAdapter.statsHolder>
         public statsHolder(View itemView) {
             super(itemView);
             state = itemView.findViewById(R.id.txt_state);
-            indian = itemView.findViewById(R.id.txt_indian);
-            foreign = itemView.findViewById(R.id.txt_foreign);
+            //indian = itemView.findViewById(R.id.txt_indian);
+            //foreign = itemView.findViewById(R.id.txt_foreign);
             recovered = itemView.findViewById(R.id.txt_recovered);
             deaths = itemView.findViewById(R.id.txt_deaths);
             tot = itemView.findViewById(R.id.txt_total);
@@ -63,11 +63,11 @@ public class statsAdapter extends RecyclerView.Adapter<statsAdapter.statsHolder>
 
 
             state.setText(stats.getState());
-            indian.setText(Integer.toString(stats.getIndian()));
-            foreign.setText(Integer.toString(stats.getForeign()));
+            //indian.setText(Integer.toString(stats.getIndian()));
+            //foreign.setText(Integer.toString(stats.getForeign()));
             recovered.setText(Integer.toString(stats.getRecovered()));
             deaths.setText(Integer.toString(stats.getDeaths()));
-            int total = stats.getForeign() + stats.getIndian();
+            int total = stats.getIndian();
             if(total>=50){
                 itemView.setBackgroundColor(Color.parseColor("#5B2949"));
             }else if(total>=20){

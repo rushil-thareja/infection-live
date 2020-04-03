@@ -47,7 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="1dp"
-        android:textSize="15sp"
+        android:textSize="18sp"
         android:textAlignment="center"
         android:textColor="@color/blue"
         android:text="total :"
@@ -61,67 +61,68 @@
         android:layout_marginTop="5dp"
         >
 
+<!--    <LinearLayout-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_weight="25"-->
+<!--        android:weightSum="100"-->
+<!--        android:layout_marginLeft="0dp"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        android:visibility="gone"-->
+<!--        >-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/indiakiimage"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="30"-->
+<!--            android:background="@drawable/ic_india" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/txt_indian"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight="70"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="1dp"-->
+<!--            android:textSize="18sp"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textColor="@color/white"-->
+<!--            />-->
+
+
+<!--    </LinearLayout>-->
+<!--    <LinearLayout-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_weight=""-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:weightSum="100"-->
+<!--        android:visibility="gone"-->
+<!--        android:layout_marginTop="5dp"-->
+<!--        >-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/bahar"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_weight="30"-->
+<!--            android:background="@drawable/ic_world" />-->
+<!--        <TextView-->
+<!--            android:id="@+id/txt_foreign"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight="70"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:padding="1dp"-->
+<!--            android:textSize="18sp"-->
+<!--            android:textAlignment="center"-->
+<!--            android:textColor="@color/white"-->
+<!--            />-->
+
+
+<!--    </LinearLayout>-->
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_weight="25"
-        android:weightSum="100"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        >
-
-        <ImageView
-            android:id="@+id/indiakiimage"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="30"
-            android:background="@drawable/ic_india" />
-        <TextView
-            android:id="@+id/txt_indian"
-            android:layout_width="0dp"
-            android:layout_weight="70"
-            android:layout_height="wrap_content"
-            android:padding="1dp"
-            android:textSize="18sp"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            />
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="25"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="100"
-
-        android:layout_marginTop="5dp"
-        >
-
-        <ImageView
-            android:id="@+id/bahar"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="30"
-            android:background="@drawable/ic_world" />
-        <TextView
-            android:id="@+id/txt_foreign"
-            android:layout_width="0dp"
-            android:layout_weight="70"
-            android:layout_height="wrap_content"
-            android:padding="1dp"
-            android:textSize="18sp"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            />
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_weight="25"
+        android:layout_weight="50"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="100"
@@ -133,12 +134,12 @@
             android:id="@+id/sahi"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="30"
+            android:layout_weight="20"
             android:background="@drawable/ic_h_green" />
         <TextView
             android:id="@+id/txt_recovered"
             android:layout_width="0dp"
-            android:layout_weight="70"
+            android:layout_weight="80"
             android:layout_height="wrap_content"
             android:padding="1dp"
             android:textSize="18sp"
@@ -151,7 +152,7 @@
 
     <LinearLayout
         android:layout_width="0dp"
-        android:layout_weight="25"
+        android:layout_weight="50"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:weightSum="100"
@@ -163,12 +164,12 @@
             android:id="@+id/dead"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="30"
+            android:layout_weight="20"
             android:background="@drawable/ic_skull" />
         <TextView
             android:id="@+id/txt_deaths"
             android:layout_width="0dp"
-            android:layout_weight="70"
+            android:layout_weight="80"
             android:layout_height="wrap_content"
             android:padding="1dp"
             android:textSize="18sp"

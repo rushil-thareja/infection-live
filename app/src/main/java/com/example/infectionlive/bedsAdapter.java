@@ -64,9 +64,9 @@ public class bedsAdapter extends RecyclerView.Adapter<bedsAdapter.bedsHolder>{
 
             state.setText(beds.getState());
             rural_beds.setText("rural beds:    "+Integer.toString(beds.getRural_beds()));
-            rural_hospitals.setText("rural hospitals:    "+Integer.toString(beds.getRural_beds()));
+            rural_hospitals.setText("rural hospitals:    "+Integer.toString(beds.getRural_hospitals()));
             urban_beds.setText("urban beds:   "+Integer.toString(beds.getUrban_beds()));
-            urban_hospitals.setText("rural beds:    "+Integer.toString(beds.getUrban_hospitals()));
+            urban_hospitals.setText("urban hospitals:    "+Integer.toString(beds.getUrban_hospitals()));
             tot.setText("total beds: "+beds.getTotal_beds()+" | total hospitals: "+beds.total_hospitals);
 
             int total = beds.getTotal_beds();

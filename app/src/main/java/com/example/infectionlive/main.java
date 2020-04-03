@@ -315,7 +315,7 @@ public class main extends Activity {
             public void onClick(View view) {
                 stop.show();
                 t.setVisibility(View.VISIBLE);
-                current = 1;
+                current = 0;
                 make_black();
                 stats_text.setTextColor(Color.parseColor("#00A0FF"));
                 graph.setBackgroundResource(R.drawable.ic_graph__blue);
@@ -345,6 +345,7 @@ public class main extends Activity {
         beds.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                tot.setVisibility(View.VISIBLE);
                 stop.show();
                 t.setVisibility(View.VISIBLE);
                 current = 1;
@@ -425,7 +426,7 @@ public class main extends Activity {
 
         final ArrayList<String> d = new ArrayList<>();
         final ArrayList<Integer> v = new ArrayList<>();
-        final Request request = new Request.Builder().url("https://api.rootnet.in/covid19-in/stats/history").build();
+        final Request request = new Request.Builder().url("https://api.rootnet.in/covid19-in/unofficial/covid19india.org/statewise/history").build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -458,14 +459,15 @@ public class main extends Activity {
                                 return;
                             }
                             Log.d("dates ayi",res);
-                            JSONArray data = out.getJSONArray("data");
+                            JSONObject di = out.getJSONObject("data");
+                            JSONArray data = di.getJSONArray("history");
                             if(state.equals("India")){
 
                             }
                             for(int i =0 ; i< data.length(); i++){
                                 JSONObject o = data.getJSONObject(i);
-                                JSONObject summ = o.getJSONObject("summary");
-                                v.add(summ.getInt("total"));
+                                JSONObject summ = o.getJSONObject("total");
+                                v.add(summ.getInt("confirmed"));
                                 d.add(o.getString("day"));
                                 Log.d("date at",d.get(i));
                             }
@@ -601,7 +603,7 @@ public class main extends Activity {
         });
     }
     public void load_stats(){
-        final Request request = new Request.Builder().url("https://api.rootnet.in/covid19-in/stats/latest").build();
+        final Request request = new Request.Builder().url("https://api.rootnet.in/covid19-in/unofficial/covid19india.org/statewise").build();
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -635,15 +637,15 @@ public class main extends Activity {
                             }
                             Log.d("dat",res);
                             JSONObject data = out.getJSONObject("data");
-                            JSONObject summ = data.getJSONObject("summary");
-                            int tot = summ.getInt("total");
-                            int indian = summ.getInt("confirmedCasesIndian");
-                            int foreign = summ.getInt("confirmedCasesForeign");
-                            int recovered = summ.getInt("discharged");
+                            JSONObject summ = data.getJSONObject("total");
+                            int tot = summ.getInt("confirmed");
+                            int indian = summ.getInt("active");
+                            //int foreign = summ.getInt("confirmedCasesForeign");
+                            int recovered = summ.getInt("recovered");
                             int deaths = summ.getInt("deaths");
-                            int confirmed_but_unknown = summ.getInt("confirmedButLocationUnidentified");
+                            int confirmed_but_unknown = 0;
 
-                            final String fin = "total: "+tot+"| indian: " + indian + "| foreign: " + foreign + "| recovered: " + recovered + "| deaths: " + deaths+"| not located : " + confirmed_but_unknown;
+                            final String fin = "total: "+tot+"| active: " + indian +  "| recovered: " + recovered + "| deaths: " + deaths;
                             Log.d("dat",fin);
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -653,14 +655,14 @@ public class main extends Activity {
                                 }
                             });
 
-                            JSONArray items = data.getJSONArray("regional");
+                            JSONArray items = data.getJSONArray("statewise");
                             for(int i = 0 ; i < items.length() ; i++){
                                 JSONObject current = items.getJSONObject(i);
-                                String name = current.getString("loc");
-                                Log.d("dat","sehenhsa"+name);
-                                int india = current.getInt("confirmedCasesIndian");
-                                int fore = current.getInt("confirmedCasesForeign");
-                                int dis = current.getInt("discharged");
+                                String name = current.getString("state");
+                                //Log.d("dat","sehenhsa"+name);
+                                int india = current.getInt("confirmed");
+                                int fore = current.getInt("active");
+                                int dis = current.getInt("recovered");
                                 int death = current.getInt("deaths");
 
                                 planetArrayList.add(new stats(name,india,fore,dis,death));

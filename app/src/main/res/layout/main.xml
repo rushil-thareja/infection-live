@@ -32,43 +32,43 @@
 <!--            android:searchIcon="@drawable/ic_round_search_24px" />-->
 
 <!--    </LinearLayout>-->
+<!--    <LinearLayout-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight="5"-->
+<!--        android:weightSum="100"-->
+<!--        android:background="@color/purple"-->
+<!--        >-->
+
+<!--        <Button-->
+<!--            android:id="@+id/button2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="50"-->
+<!--            android:text="OFFICIAL"-->
+<!--            android:layout_margin="2dp"-->
+<!--            android:textColor="@color/back"-->
+<!--            android:background="@drawable/select_blue"-->
+<!--            />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/button3"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="50"-->
+<!--            android:text="UNOFFICIAL"-->
+<!--            android:layout_margin="2dp"-->
+<!--            android:textColor="@color/back"-->
+<!--            android:background="@drawable/select_black"-->
+<!--            />-->
+<!--    </LinearLayout>-->
+
+
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5"
-        android:weightSum="100"
-        android:background="@color/purple"
-        >
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="50"
-            android:text="OFFICIAL"
-            android:layout_margin="2dp"
-            android:textColor="@color/back"
-            android:background="@drawable/select_blue"
-            />
-
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="50"
-            android:text="UNOFFICIAL"
-            android:layout_margin="2dp"
-            android:textColor="@color/back"
-            android:background="@drawable/select_black"
-            />
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="85"
+        android:layout_weight="90"
         android:background="@color/back"
         android:orientation="vertical"
         android:weightSum="100">
