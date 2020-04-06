@@ -72,6 +72,7 @@ public class main extends Activity {
     int fill2;
     String[] dates;
     int[] vals;
+    FloatingActionButton stop;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -170,7 +171,7 @@ public class main extends Activity {
         refresh = findViewById(R.id.refresh);
 
 
-        final FloatingActionButton stop = findViewById(R.id.fab);
+        stop = findViewById(R.id.fab);
 
         graph.setBackgroundResource(R.drawable.ic_graph__blue);
         beds.setBackgroundResource(R.drawable.ic_beds_black);
@@ -240,7 +241,7 @@ public class main extends Activity {
 
                 recyclerView.setVisibility(View.INVISIBLE);
                 bed.setVisibility(View.INVISIBLE);
-
+                pause_buttons();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -300,7 +301,7 @@ public class main extends Activity {
 
                         YAxis rightAxis = chart.getAxisRight();
                         rightAxis.setTextColor(Color.parseColor("#211348"));
-
+                        play_buttons();
 
                     }
                 }, 3000);
@@ -325,12 +326,12 @@ public class main extends Activity {
                 bed.setVisibility(View.INVISIBLE);
                 refresh.setVisibility(View.VISIBLE);
                 refresh.playAnimation();
-
+                pause_buttons();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
 
-
+                        play_buttons();
                         refresh.cancelAnimation();
                         refresh.setVisibility(View.INVISIBLE);
                         recyclerView.setVisibility(View.VISIBLE);
@@ -358,12 +359,12 @@ public class main extends Activity {
                 bed.setVisibility(View.INVISIBLE);
                 refresh.setVisibility(View.VISIBLE);
                 refresh.playAnimation();
-
+                pause_buttons();
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
 
-
+                        play_buttons();
                         refresh.cancelAnimation();
                         refresh.setVisibility(View.INVISIBLE);
                         bed.setVisibility(View.VISIBLE);
@@ -383,11 +384,12 @@ public class main extends Activity {
                     refresh.setVisibility(View.VISIBLE);
                     refresh.playAnimation();
                     recyclerView.setVisibility(View.INVISIBLE);
+                    pause_buttons();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
 
-
+                            play_buttons();
                             refresh.cancelAnimation();
                             refresh.setVisibility(View.INVISIBLE);
                             recyclerView.setVisibility(View.VISIBLE);
@@ -401,11 +403,12 @@ public class main extends Activity {
                     refresh.setVisibility(View.VISIBLE);
                     refresh.playAnimation();
                     bed.setVisibility(View.INVISIBLE);
+                    play_buttons();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
 
-
+                            pause_buttons();
                             refresh.cancelAnimation();
                             refresh.setVisibility(View.INVISIBLE);
                             bed.setVisibility(View.VISIBLE);
@@ -722,6 +725,21 @@ public class main extends Activity {
         ll.setVisibility(View.GONE);
         chart.setVisibility(View.GONE);
     }
+    public void pause_buttons(){
+        graph.setClickable(false);
+        beds.setClickable(false);
+        history.setClickable(false);
+        help.setClickable(false);
+        stop.hide();
+    }
+    public void play_buttons(){
+        graph.setClickable(true);
+        beds.setClickable(true);
+        history.setClickable(true);
+        help.setClickable(true);
+        stop.show();
+    }
+
     public void selected_state(String state){
         Log.d("chua",state);
     }
