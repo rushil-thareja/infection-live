@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -73,6 +74,7 @@ public class main extends Activity {
     String[] dates;
     int[] vals;
     FloatingActionButton stop;
+    String choice ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +96,8 @@ public class main extends Activity {
         client = new OkHttpClient();
         fill = 0;
         spinner = (Spinner) findViewById(R.id.spinner);
-
+        choice = "India";
+        setstate();
         ArrayAdapter<CharSequence> adapters = ArrayAdapter.createFromResource(this,
                 R.array.india_states, android.R.layout.simple_spinner_item);
 // Specify the layout to use when the list of choices appears
@@ -102,11 +105,138 @@ public class main extends Activity {
 // Apply the adapter to the spinner
         spinner.setAdapter(adapters);
         //spinner.setOnItemSelectedListener(this);
-
+        spinner.setSelection(0, false);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d("chu dia",i+" "+l+" "+adapterView.getSelectedItemPosition());
+
+                stop.hide();
+
+                chart.clear();
+                make_black();
+                //spinner.setSelection(i);
+                TextView set = findViewById(R.id.chosen);
+                set.setVisibility(View.VISIBLE);
+                t.setVisibility(View.GONE);
+                spinner.setVisibility(View.VISIBLE);
+                //ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(main.class,R.layout.support_simple_spinner_dropdown_item);
+
+//                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//                    @Override
+//                    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                        Log.d("chua",(String)adapterView.getSelectedItem());
+//                    }
+//
+//                    @Override
+//                    public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//                    }
+//                });
+
+                current = 2;
+
+                history_text.setTextColor(Color.parseColor("#00A0FF"));
+                history.setBackgroundResource(R.drawable.ic_history_blue);
+                which.setText("Historical Statistics");
+                refresh.setVisibility(View.VISIBLE);
+                refresh.playAnimation();
+
+                dates = new String[10000];
+                vals = new int[10000];
+
+                get_dates(categories.get(i),dates,vals);
+
+
+
+
+                recyclerView.setVisibility(View.INVISIBLE);
+                bed.setVisibility(View.INVISIBLE);
+                pause_buttons();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+//                        for(int i = 0; i < fill ; i++){
+//                            Log.d("gash",dates[i]);
+//                        }
+                        //play_buttons();
+
+                        ll.setVisibility(View.VISIBLE);
+                        chart.setVisibility(View.VISIBLE);
+
+
+                        refresh.cancelAnimation();
+                        refresh.setVisibility(View.INVISIBLE);
+
+                        if(fill == 0){
+                            Toast.makeText(main.this,"NO CASE FOR THIS STATE",Toast.LENGTH_LONG).show();
+                            choice = "india";
+                            spinner.setSelection(0);
+                            history.performClick();
+                            return;
+
+
+                        }
+
+                        Log.d("fill",fill+" "+fill2);
+
+
+
+
+
+                        String[] pass = new String[fill];
+
+                        for(int i = 0; i < fill ; i++){
+                            pass[i] = Integer.toString(i);
+                            Log.d("pass",pass[i]);
+                        }
+                        entries.clear();
+                        for(int i = 0 ; i < fill ; i++){
+                            Log.d("entery",i+" "+vals[i]);
+                            entries.add(new Entry(i,vals[i]));
+                        }
+                        LineDataSet dataSet = new LineDataSet(entries, " ");
+                        dataSet.setColor(Color.parseColor("#FD00FF"));
+                        dataSet.setDrawCircles(true);
+                        dataSet.setValueTextColor(Color.parseColor("#00A0FF"));
+                        dataSet.setValueTextSize(14);
+                        dataSet.setHighLightColor(Color.parseColor("#ffffff"));
+                        dataSet.setFillColor(Color.parseColor("#FD00FF"));
+                        dataSet.setCircleColor(Color.parseColor("#ffffff"));
+                        LineData lineData = new LineData(dataSet);
+                        chart.setBorderColor(Color.parseColor("#211348"));
+                        //chart.setOutlineSpotShadowColor(Color.parseColor("#FD00FF"));
+                        chart.setData(lineData);
+                        chart.invalidate();
+                        chart.animateXY(1000,2000);
+
+                        Description d = new Description();
+                        d.setText("start day : "+dates[0]+"end day : "+dates[fill-1]);
+                        d.setTextColor(Color.parseColor("#ffffff"));
+                        //d.setPosition(d.getXOffset(),d.getYOffset()-2f);
+                        d.setTextSize(14f);
+                        chart.setDescription(d);
+
+                        XAxis xAxis = chart.getXAxis();
+                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                        xAxis.setTextColor(Color.parseColor("#ffffff"));
+                        xAxis.setTextSize(16f);
+
+
+
+                        xAxis.setValueFormatter(new DateAxisValueFormatter(pass));
+
+                        YAxis leftAxis = chart.getAxisLeft();
+                        leftAxis.setTextColor(Color.parseColor("#ffffff"));
+                        leftAxis.setTextSize(16f);
+
+                        YAxis rightAxis = chart.getAxisRight();
+                        rightAxis.setTextColor(Color.parseColor("#211348"));
+                        play_buttons();
+                        stop.hide();
+                    }
+                }, 3000);
+
             }
 
             @Override
@@ -114,43 +244,6 @@ public class main extends Activity {
 
             }
         });
-        categories.add("india");
-        categories.add("Andaman and Nicobar Islands");
-        categories.add("Andhra Pradesh");
-        categories.add("Arunachal Pradesh");
-        categories.add("Assam");
-        categories.add("Bihar");
-        categories.add("Chandigarh");
-        categories.add("Chhattisgarh");
-        categories.add("Dadra and Nagar Haveli");
-        categories.add("Daman and Diu");
-        categories.add("Delhi");
-        categories.add("Goa");
-        categories.add("Gujarat");
-        categories.add("Haryana");
-        categories.add("Himachal Pradesh");
-        categories.add("Jammu and Kashmir");
-        categories.add("Jharkhand");
-        categories.add("Karnataka");
-        categories.add("Kerala");
-        categories.add("Lakshadweep");
-        categories.add("Madhya Pradesh");
-        categories.add("Maharashtra");
-        categories.add("Manipur");
-        categories.add("Meghalaya");
-        categories.add("Mizoram");
-        categories.add("Nagaland");
-        categories.add("Orissa");
-        categories.add("Pondicherry");
-        categories.add("Punjab");
-        categories.add("Rajasthan");
-        categories.add("Sikkim");
-        categories.add("Tamil Nadu");
-        categories.add("Telangana");
-        categories.add("Tripura");
-        categories.add("Uttaranchal");
-        categories.add("Uttar Pradesh");
-        categories.add("West Bengal");
 
         //get_dates("India");
 
@@ -234,6 +327,7 @@ public class main extends Activity {
 
                 dates = new String[10000];
                 vals = new int[10000];
+
                 get_dates("India",dates,vals);
 
 
@@ -245,9 +339,12 @@ public class main extends Activity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        for(int i = 0; i < fill ; i++){
-                            Log.d("gash",dates[i]);
-                        }
+//                        for(int i = 0; i < fill ; i++){
+//                            Log.d("gash",dates[i]);
+//                        }
+                        //play_buttons();
+
+                        Log.d("fill",fill+" "+fill2);
 
                         ll.setVisibility(View.VISIBLE);
                         chart.setVisibility(View.VISIBLE);
@@ -258,27 +355,32 @@ public class main extends Activity {
 
 
 
-                        String[] pass = new String[fill];
+                        String[] passi = new String[fill];
 
                         for(int i = 0; i < fill ; i++){
-                            pass[i] = Integer.toString(i);
+                            passi[i] = Integer.toString(i);
                         }
-
+                        entries.clear();
                         for(int i = 0 ; i < fill ; i++){
 
                             entries.add(new Entry(i,vals[i]));
+
                         }
                         LineDataSet dataSet = new LineDataSet(entries, " ");
-
+                        dataSet.setColor(Color.parseColor("#FD00FF"));
                         dataSet.setDrawCircles(true);
                         dataSet.setValueTextColor(Color.parseColor("#00A0FF"));
-                        dataSet.setValueTextSize(16);
+                        dataSet.setValueTextSize(14);
                         dataSet.setHighLightColor(Color.parseColor("#ffffff"));
-                        dataSet.setFillColor(Color.parseColor("#00A0FF"));
+                        dataSet.setFillColor(Color.parseColor("#FD00FF"));
+                        dataSet.setCircleColor(Color.parseColor("#ffffff"));
                         LineData lineData = new LineData(dataSet);
+                        chart.setBorderColor(Color.parseColor("#211348"));
+                        //chart.setOutlineSpotShadowColor(Color.parseColor("#FD00FF"));
                         chart.setData(lineData);
                         chart.invalidate();
                         chart.animateXY(1000,2000);
+
                         Description d = new Description();
                         d.setText("start day : "+dates[0]+"end day : "+dates[fill-1]);
                         d.setTextColor(Color.parseColor("#ffffff"));
@@ -293,7 +395,7 @@ public class main extends Activity {
 
 
 
-                        xAxis.setValueFormatter(new DateAxisValueFormatter(pass));
+                        xAxis.setValueFormatter(new DateAxisValueFormatter(passi));
 
                         YAxis leftAxis = chart.getAxisLeft();
                         leftAxis.setTextColor(Color.parseColor("#ffffff"));
@@ -302,7 +404,7 @@ public class main extends Activity {
                         YAxis rightAxis = chart.getAxisRight();
                         rightAxis.setTextColor(Color.parseColor("#211348"));
                         play_buttons();
-
+                        stop.hide();
                     }
                 }, 3000);
 
@@ -390,6 +492,7 @@ public class main extends Activity {
                         public void run() {
 
                             play_buttons();
+
                             refresh.cancelAnimation();
                             refresh.setVisibility(View.INVISIBLE);
                             recyclerView.setVisibility(View.VISIBLE);
@@ -403,12 +506,13 @@ public class main extends Activity {
                     refresh.setVisibility(View.VISIBLE);
                     refresh.playAnimation();
                     bed.setVisibility(View.INVISIBLE);
-                    play_buttons();
+                    pause_buttons();
+
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            play_buttons();
 
-                            pause_buttons();
                             refresh.cancelAnimation();
                             refresh.setVisibility(View.INVISIBLE);
                             bed.setVisibility(View.VISIBLE);
@@ -427,8 +531,6 @@ public class main extends Activity {
     }
     public  void get_dates(final String state , final String[] dat , final int[] vals){
 
-        final ArrayList<String> d = new ArrayList<>();
-        final ArrayList<Integer> v = new ArrayList<>();
         final Request request = new Request.Builder().url("https://api.rootnet.in/covid19-in/unofficial/covid19india.org/statewise/history").build();
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -449,6 +551,10 @@ public class main extends Activity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        fill = 0;
+                        fill2 = 0;
+                        final ArrayList<String> d = new ArrayList<>();
+                        final ArrayList<Integer> v = new ArrayList<>();
 
                         try {
                             //hospitals.clear();
@@ -465,14 +571,51 @@ public class main extends Activity {
                             JSONObject di = out.getJSONObject("data");
                             JSONArray data = di.getJSONArray("history");
                             if(state.equals("India")){
+                                for(int i =0 ; i< data.length(); i++){
+                                    JSONObject o = data.getJSONObject(i);
+                                    JSONObject summ = o.getJSONObject("total");
+                                    v.add(summ.getInt("confirmed"));
+                                    d.add(o.getString("day"));
+                                    Log.d("date at",d.get(i));
+                                }
+                            }else{
+                                for(int i =0 ; i< data.length(); i++){
+                                    JSONObject o = data.getJSONObject(i);
+                                    JSONArray summ = o.getJSONArray("statewise");
 
+                                    for(int j = 0 ; j < summ.length() ; j++){
+                                        JSONObject curr = summ.getJSONObject(j);
+                                        String sta = curr.getString("state");
+                                        if(sta.equals(state)){
+                                            v.add(curr.getInt("confirmed"));
+                                            d.add(o.getString("day"));
+                                            break;
+                                        }
+                                    }
+
+
+                                }
                             }
-                            for(int i =0 ; i< data.length(); i++){
-                                JSONObject o = data.getJSONObject(i);
-                                JSONObject summ = o.getJSONObject("total");
-                                v.add(summ.getInt("confirmed"));
-                                d.add(o.getString("day"));
-                                Log.d("date at",d.get(i));
+
+
+                            ArrayList<String> tempdate = new ArrayList<>();
+                            ArrayList<Integer> tempvalues = new ArrayList<>();
+
+                            int l = d.size();
+
+                            for(int i = 0 ; i<l ; i++){
+                                if(!tempdate.contains(d.get(i))){
+                                    tempdate.add(d.get(i));
+                                    tempvalues.add(v.get(i));
+                                    Log.d("added",d.get(i));
+                                }
+                            }
+                            d.clear();
+                            v.clear();
+
+                            for(int i = 0 ; i < tempdate.size() ; i++){
+                                d.add(tempdate.get(i));
+                                v.add(tempvalues.get(i));
                             }
 
                             fill = d.size();
@@ -711,7 +854,8 @@ public class main extends Activity {
     public void make_black(){
         spinner.setVisibility(View.GONE);
         TextView set = findViewById(R.id.chosen);
-
+        choice = "India";
+        //spinner.setSelection(0);
         graph.setBackgroundResource(R.drawable.ic_graph_black);
         beds.setBackgroundResource(R.drawable.ic_beds_black);
         history.setBackgroundResource(R.drawable.ic_history_black);
@@ -742,6 +886,46 @@ public class main extends Activity {
 
     public void selected_state(String state){
         Log.d("chua",state);
+    }
+    public void setstate(){
+        categories.add("india");
+        categories.add("Andaman and Nicobar Islands");
+        categories.add("Andhra Pradesh");
+        categories.add("Arunachal Pradesh");
+        categories.add("Assam");
+        categories.add("Bihar");
+        categories.add("Chandigarh");
+        categories.add("Chhattisgarh");
+        categories.add("Dadra and Nagar Haveli");
+        categories.add("Daman and Diu");
+        categories.add("Delhi");
+        categories.add("Goa");
+        categories.add("Gujarat");
+        categories.add("Haryana");
+        categories.add("Himachal Pradesh");
+        categories.add("Jammu and Kashmir");
+        categories.add("Jharkhand");
+        categories.add("Karnataka");
+        categories.add("Kerala");
+        categories.add("Lakshadweep");
+        categories.add("Madhya Pradesh");
+        categories.add("Maharashtra");
+        categories.add("Manipur");
+        categories.add("Meghalaya");
+        categories.add("Mizoram");
+        categories.add("Nagaland");
+        categories.add("Orissa");
+        categories.add("Pondicherry");
+        categories.add("Punjab");
+        categories.add("Rajasthan");
+        categories.add("Sikkim");
+        categories.add("Tamil Nadu");
+        categories.add("Telangana");
+        categories.add("Tripura");
+        categories.add("Uttaranchal");
+        categories.add("Uttar Pradesh");
+        categories.add("West Bengal");
+
     }
 
 //
